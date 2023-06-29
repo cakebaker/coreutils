@@ -351,3 +351,13 @@ fn test_check_md5sum_mixed_format() {
 fn test_invalid_arg() {
     new_ucmd!().arg("--definitely-invalid").fails().code_is(1);
 }
+
+#[test]
+#[cfg(windows)]
+fn test_call_with_exe() {
+    let scene = TestScenario::new("md5sum.exe");
+    let at = &scene.fixtures;
+    at.touch("example.txt");
+
+    scene.ucmd().arg("example.txt").succeeds();
+}
