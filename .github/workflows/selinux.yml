@@ -1,0 +1,117 @@
+name: SELinux
+
+on:
+  push
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: ${{ github.ref != 'refs/heads/main' }}
+
+jobs:
+  selinux:
+    name: Run GNU tests requiring SELinux
+    runs-on: macos-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: leleliu008/github-actions-vagrant@v1
+        with:
+          mem: 4096
+          box: roboxes/fedora39
+          run: |
+            getenforce
+            #dnf -y install curl
+            #curl https://sh.rustup.rs -sSf --output rustup.sh
+            #sh rustup.sh -y --profile=minimal
+#jobs:
+#  selinux:
+#    name: Run GNU tests requiring SELinux
+#    runs-on: ubuntu-latest
+#    container:
+#      image: fedora:latest
+#    steps:
+#    - name: check SELinux
+#      run: |
+#        dnf -y install libselinux libselinux-utils libselinux-devel
+#        getenforce
+#        sestatus
+#    - name: Install dependencies
+#      run: dnf -y install git make rust-cc-devel libselinux-devel clang-devel autoconf automake bison gettext gettext-devel gperf m4 patch texinfo texinfo-tex wget xz
+#    - name: Initialize workflow variables
+#      id: vars
+#      shell: bash
+#      run: |
+#        ## VARs setup
+#        outputs() { step_id="${{ github.action }}"; for var in "$@" ; do echo steps.${step_id}.outputs.${var}="${!var}"; echo "${var}=${!var}" >> $GITHUB_OUTPUT; done; }
+#        # * config
+#        path_GNU="gnu"
+#        path_GNU_tests="${path_GNU}/tests"
+#        path_UUTILS="uutils"
+#        path_reference="reference"
+#        outputs path_GNU path_GNU_tests path_reference path_UUTILS
+#        #
+#        repo_default_branch="${{ github.event.repository.default_branch }}"
+#        repo_GNU_ref="v9.4"
+#        repo_reference_branch="${{ github.event.repository.default_branch }}"
+#        outputs repo_default_branch repo_GNU_ref repo_reference_branch
+#        #
+#        SUITE_LOG_FILE="${path_GNU_tests}/test-suite.log"
+#        ROOT_SUITE_LOG_FILE="${path_GNU_tests}/test-suite-root.log"
+#        TEST_LOGS_GLOB="${path_GNU_tests}/**/*.log" ## note: not usable at bash CLI; [why] double globstar not enabled by default b/c MacOS includes only bash v3 which doesn't have double globstar support
+#        TEST_FILESET_PREFIX='test-fileset-IDs.sha1#'
+#        TEST_FILESET_SUFFIX='.txt'
+#        TEST_SUMMARY_FILE='gnu-result.json'
+#        TEST_FULL_SUMMARY_FILE='gnu-full-result.json'
+#        outputs SUITE_LOG_FILE ROOT_SUITE_LOG_FILE TEST_FILESET_PREFIX TEST_FILESET_SUFFIX TEST_LOGS_GLOB TEST_SUMMARY_FILE TEST_FULL_SUMMARY_FILE
+#    - name: Checkout code (uutil)
+#      uses: actions/checkout@v4
+#      with:
+#        path: '${{ steps.vars.outputs.path_UUTILS }}'
+#    - uses: dtolnay/rust-toolchain@master
+#      with:
+#        toolchain: stable
+#        components: rustfmt
+#    - uses: Swatinem/rust-cache@v2
+#      with:
+#        workspaces: "./${{ steps.vars.outputs.path_UUTILS }} -> target"
+#    - name: Checkout code (GNU coreutils)
+#      uses: actions/checkout@v4
+#      with:
+#        repository: 'coreutils/coreutils'
+#        path: '${{ steps.vars.outputs.path_GNU }}'
+#        ref: ${{ steps.vars.outputs.repo_GNU_ref }}
+#        submodules: recursive
+#    - name: Build binaries
+#      shell: bash
+#      env:
+#        FORCE_UNSAFE_CONFIGURE: "1"
+#      run: |
+#        ## Build binaries
+#        cd '${{ steps.vars.outputs.path_UUTILS }}'
+#        bash util/build-gnu.sh --release-build
+#
+#    - name: Run GNU tests
+#      shell: bash
+#      run: |
+#        cd '${{ steps.vars.outputs.path_UUTILS }}'
+#
+#        tests=( "mkdir/selinux" "mkdir/restorecon" )
+#
+#        for test in "${tests[@]}"
+#        do
+#          bash util/run-gnu-test.sh tests/$test
+#        done
+#        #bash uutils/util/run-gnu-test.sh
+##tests/mkdir/selinux.sh
+##tests/mkdir/restorecon.sh
+##tests/misc/selinux.sh
+##tests/misc/chcon.sh
+##tests/install/install-Z-selinux.sh
+##tests/install/install-C-selinux.sh
+##tests/id/no-context.sh
+##tests/id/context.sh
+##tests/cp/no-ctx.sh
+##tests/cp/cp-a-selinux.sh
