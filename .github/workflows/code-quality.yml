@@ -5,8 +5,8 @@ name: Code Quality
 on:
   pull_request:
   push:
-    branches:
-      - main
+    #    branches:
+    # - main
 
 env:
   # * style job configuration
@@ -84,7 +84,7 @@ jobs:
       with:
         toolchain: stable
         components: clippy
-    - uses: Swatinem/rust-cache@v2
+    - uses: Swatinem/rust-cache@master
     - name: Run sccache-cache
       uses: mozilla-actions/sccache-action@v0.0.4
     - name: Initialize workflow variables
