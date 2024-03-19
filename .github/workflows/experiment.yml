@@ -30,5 +30,5 @@ jobs:
       run: |
         UTILITY_LIST="$(./util/show-utils.sh ${{ steps.vars.outputs.CARGO_FEATURES_OPTION }})"
         echo UTILITY_LIST=${UTILITY_LIST}
-        for u in ${UTILITY_LIST}; do cargo test --features "{u}" --no-default-features; done;
+        "$(for u in ${UTILITY_LIST}; do cargo test --features "${u}" --no-default-features; done;)"
 
