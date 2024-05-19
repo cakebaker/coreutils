@@ -157,6 +157,7 @@ fn test_symlinks() {
             // -L, --dereference    follow links
             let args = ["-L", "-c", NORMAL_FORMAT_STR, file];
             let expected_stdout = unwrap_or_return!(expected_result(&ts, &args)).stdout_move_str();
+            println!("GNU: {expected_stdout}");
             ts.ucmd().args(&args).succeeds().stdout_is(expected_stdout);
         }
     }
