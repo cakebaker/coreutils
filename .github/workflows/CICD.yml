@@ -18,10 +18,10 @@ env:
 on:
   pull_request:
   push:
-    tags:
-      - '*'
-    branches:
-      - main
+    #    tags:
+    # - '*'
+    #branches:
+    #  - main
 
 permissions:
   contents: read # to fetch code (actions/checkout)
@@ -940,7 +940,8 @@ jobs:
           - { os: windows-latest , features: windows, toolchain: nightly-x86_64-pc-windows-gnu }
     steps:
     - uses: actions/checkout@v4
-    - uses: dtolnay/rust-toolchain@master
+    #- uses: dtolnay/rust-toolchain@master
+    - uses: dtolnay/rust-toolchain@nightly
       with:
         toolchain: ${{ matrix.job.toolchain }}
         components: rustfmt
