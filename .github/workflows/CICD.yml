@@ -1013,6 +1013,7 @@ jobs:
     - name: Test
       run: cargo nextest run --profile ci --hide-progress-bar ${{ steps.vars.outputs.CARGO_FEATURES_OPTION }} -p uucore -p coreutils
       env:
+        CARGO_INCREMENTAL: "0"
         RUSTC_WRAPPER: ""
         RUSTFLAGS: "-Zprofile -Ccodegen-units=1 -Copt-level=0 -Clink-dead-code -Coverflow-checks=off -Zpanic_abort_tests -Cpanic=abort"
         RUSTDOCFLAGS: "-Cpanic=abort"
